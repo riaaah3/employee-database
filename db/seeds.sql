@@ -1,24 +1,16 @@
-DROP DATABASE IF EXISTS company_db;
-CREATE DATABASE company_db;
+\c company_zp;
 
-\c company_db;
+INSERT INTO department (department_name)
+VALUES ('Sales'),('Human Resources'),('Security');
 
-CREATE TABLE department (
-  id SERIAL primary key,
-  department_name VARCHAR(30) NOT NULL,
-);
+INSERT INTO roles (title, salary, department_id)
+VALUES
+('Manager for Sales',120000,1),
+('Manager for Human Resources', 120000,2),
+('Manager for Security', 1200000, 3);
 
-CREATE TABLE role (
-    id SERIAL primary key,
-    title VARCHAR(30),
-    salary DECIMAL NOT NULL,
-    department_id INTEGER NOT NULL REFERENCES DEPARTMENT (id) on delete CASCADE,
-);
-
-CREATE TABLE employee (
-    id SERIAL primary key,
-    first_name VARCHAR(30),
-    last_name VARCHAR(30),
-    role_id INTEGER NOT NULL REFERENCES role(id) on delete CASCADE,
-    manager_id INTEGER NOT NULL REFERENCES employee(id) on delete SET NULL,
-);
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES
+('Ashley','Burks',1),
+('Tiffany', 'Stevenson', 2),
+('Jackson', 'Allgood', 3);
