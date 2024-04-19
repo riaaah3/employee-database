@@ -1,11 +1,10 @@
-const inquirer = require('inquirer');
+const { prompt } = require('inquirer');
 const { Pool } = require('pg');
-require("console.table")
 
 const pool = new Pool(
     {
         // TODO: Enter PostgreSQL username
-        user: 'Zariah',
+        user: 'postgres',
         // TODO: Enter PostgreSQL password
         password: 'Mercurial1729',
         host: 'localhost',
@@ -15,18 +14,28 @@ const pool = new Pool(
     console.log(`Connected to the company_zp; database.`)
 )
 
-pool.connect();
+init();
+
+function init() {
+    pool.connect();
+    try { startFunction();
+        console.log("after start function");
+    }
+    catch(err) {console.log(err)}
+} 
+
 
 function startFunction() {
-    inquirer.prompt([
+    prompt([
         {
             type: "list",
             message: "what would you like to do?",
             name: "option",
-            choices: ["Add Department", "Add Role", "Add Employee", "View Department", "View Roles", "View Employees", "Exit App", "Update an Employee role"]
-        }
-    ]).then(({ option }) => {
-        switch (option) {
+            choices: ["Add Department", "Add Role", "Add Employee", "View Department", "View Roles", "View Employees", "Exit App", "Update an Employee role"],
+        },
+    ]).then((res) => {
+        console.log(res);
+        switch (res.option) {
             case "Add Department":
                 addDepartment();
                 break;
@@ -46,42 +55,43 @@ function startFunction() {
                 viewEmployees();
                 break;
             case "Exit App":
-                pool.end()
-                process.exit(0)
+                console.log('exit');
+               // process.exit(0)
+                break;
 
             case "Update an Employee role":
                 updateRole();
                 break;
 
         }
-    })
+    }).catch((err) => { console.log(err); });
 }
 
 function viewDepartment() {
     pool.query("SELECT * FROM department;", function (err, data) {
         if (err) throw err;
         console.table(data.rows);
+    }).then((res) => {
         startFunction()
-    })
-}
+    });
+};
 
 function viewRoles() {
     pool.query("SELECT * FROM roles;", function (err, data) {
         if (err) throw err;
-
         // console.log(data)
         console.table(data.rows);
+    }).then((res) => {
         startFunction()
-    })
-}
+    });
+};
 
 function viewEmployees() {
     pool.query("SELECT * FROM employee;", function (err, data) {
         if (err) throw err;
         // console.log(data)
         console.table(data.rows);
-        startFunction()
-    })
-}
-
-startFunction()
+    }).then((res) =>{
+        startFunction() 
+    });
+};
