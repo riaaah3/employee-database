@@ -71,9 +71,8 @@ function viewDepartment() {
     pool.query("SELECT * FROM department;", function (err, data) {
         if (err) throw err;
         console.table(data.rows);
-    }).then((res) => {
-        startFunction()
-    });
+    })
+    startFunction();
 };
 
 function viewRoles() {
@@ -81,9 +80,8 @@ function viewRoles() {
         if (err) throw err;
         // console.log(data)
         console.table(data.rows);
-    }).then((res) => {
-        startFunction()
-    });
+    })
+    startFunction();
 };
 
 function viewEmployees() {
@@ -91,7 +89,6 @@ function viewEmployees() {
         if (err) throw err;
         // console.log(data)
         console.table(data.rows);
-    }).then((res) =>{
-        startFunction() 
-    });
+    })
+    startFunction();
 };
