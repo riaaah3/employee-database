@@ -20,10 +20,6 @@ Users can use this to help keep track of current employees and job roles,
 add new job roles, and also see the salary for each employee
 amd their job role.
 
-```md
-![]()
-```
-
 ## License
 
 None
@@ -32,4 +28,4 @@ please check [here](https://choosealicense.com/licenses/)
 
 ## Link to Video
 
-()
+(https://drive.google.com/file/d/1s30wGekH2xI4feW9oRk7qQmYKGiB2hYS/view?usp=sharing)

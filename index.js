@@ -29,7 +29,7 @@ function startFunction() {
     prompt([
         {
             type: "list",
-            message: "what would you like to do?",
+            message: "What would you like to do?",
             name: "option",
             choices: ["Add Department", "Add Role", "Add Employee", "View Department", "View Roles", "View Employees", "Exit App", "Update an Employee role"],
         },
