@@ -204,3 +204,53 @@ function addEmployee() {
         })
     })
 }
+
+function updateRole(){
+
+
+pool.query("SELECT * FROM employee;", function (err, data) {
+    if (err) throw err;
+    let employeeID = data.rows.map(element => {
+        return ({
+            name: element.first_name + " " + element.last_name,
+            value: element.id
+        })
+    })
+ 
+  
+    pool.query("SELECT * FROM roles;", function (err, data) {
+        if (err) throw err;
+        let roleId = data.rows.map(element => {
+            return ({
+                name: element.title,
+                value: element.id
+            })
+        })
+        console.log(roleId)
+        prompt([
+          
+            
+            {
+                type: "list",
+                message: "Select epmployee to be updated",
+                name: "employeeID",
+                choices: employeeID
+            },
+              
+            {
+                type: "list",
+                message: "Select new role",
+                name: "roleID",
+                choices: roleId
+            }
+        ]).then(response => {
+            pool.query("UPDATE employee SET role_id = $1 where id = $2;",
+                [ response.roleID,response.employeeID], function (err, data) {
+                    if (err) throw err;
+                    console.table(data)
+                    startFunction()
+                })
+        })
+    })
+})
+}
