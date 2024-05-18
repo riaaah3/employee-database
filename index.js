@@ -18,11 +18,12 @@ init();
 
 function init() {
     pool.connect();
-    try { startFunction();
+    try {
+        startFunction();
         console.log("after start function");
     }
-    catch(err) {console.log(err)}
-} 
+    catch (err) { console.log(err) }
+}
 
 
 function startFunction() {
@@ -56,7 +57,7 @@ function startFunction() {
                 break;
             case "Exit App":
                 console.log('exit');
-               // process.exit(0)
+                // process.exit(0)
                 break;
 
             case "Update an Employee role":
@@ -71,8 +72,8 @@ function viewDepartment() {
     pool.query("SELECT * FROM department;", function (err, data) {
         if (err) throw err;
         console.table(data.rows);
+        startFunction();
     })
-    startFunction();
 };
 
 function viewRoles() {
@@ -80,8 +81,8 @@ function viewRoles() {
         if (err) throw err;
         // console.log(data)
         console.table(data.rows);
+        startFunction();
     })
-    startFunction();
 };
 
 function viewEmployees() {
@@ -89,6 +90,117 @@ function viewEmployees() {
         if (err) throw err;
         // console.log(data)
         console.table(data.rows);
+        startFunction();
     })
-    startFunction();
 };
+
+
+function addRole() {
+    pool.query("SELECT * FROM department;", function (err, data) {
+        if (err) throw err;
+        let departmentId = data.rows.map(element => {
+            return ({
+                name: element.department_name,
+                value: element.id
+            })
+        })
+        prompt([
+            {
+                type: "input",
+                message: "Enter Role Title",
+                name: "title"
+            },
+            {
+                type: "input",
+                message: "Enter Role Salary",
+                name: "salary"
+            },
+            {
+                type: "list",
+                message: "Enter Department ID",
+                name: "departmentID",
+                choices: departmentId
+            }
+        ]).then(response => {
+            pool.query("INSERT INTO roles (title, salary, department_id) VALUES ($1, $2, $3);",
+                [response.title, response.salary, response.departmentID], function (err, data) {
+                    if (err) throw err;
+                    console.table(data)
+                    startFunction()
+                })
+        })
+
+    })
+}
+
+function addDepartment() {
+    prompt([
+
+        {
+            type: "input",
+            message: "Enter Department name",
+            name: "departmentName"
+        }
+    ]).then(response => {
+        pool.query("INSERT INTO department (department_name) VALUES ($1);", [response.departmentName], function (err, data) {
+            if (err) throw err;
+            console.table(data)
+            startFunction()
+        })
+    })
+}
+
+function addEmployee() {
+    pool.query("SELECT * FROM employee where manager_id is null;", function (err, data) {
+        if (err) throw err;
+        let managerId = data.rows.map(element => {
+            return ({
+                name: element.first_name + " " + element.last_name,
+                value: element.id
+            })
+        })
+        managerId.push({name:"Manager",value:null})
+        console.log(managerId)
+        pool.query("SELECT * FROM roles;", function (err, data) {
+            if (err) throw err;
+            let roleId = data.rows.map(element => {
+                return ({
+                    name: element.title,
+                    value: element.id
+                })
+            })
+            console.log(roleId)
+            prompt([
+                {
+                    type: "input",
+                    message: "Enter Employee First Name",
+                    name: "title"
+                },
+                {
+                    type: "input",
+                    message: "Enter Employee Last Name",
+                    name: "salary"
+                },
+                {
+                    type: "list",
+                    message: "Enter Role ID",
+                    name: "roleID",
+                    choices: roleId
+                },
+                {
+                    type: "list",
+                    message: "Enter Manager ID",
+                    name: "managerID",
+                    choices: managerId
+                },
+            ]).then(response => {
+                pool.query("INSERT INTO employee (first_name, last_name, role_id,manager_id) VALUES ($1, $2, $3,$4);",
+                    [response.title, response.salary, response.roleID,response.managerId], function (err, data) {
+                        if (err) throw err;
+                        console.table(data)
+                        startFunction()
+                    })
+            })
+        })
+    })
+}
